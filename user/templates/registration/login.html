@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+</head>
+<body>
+{% include 'banner.html' %}
+
+<form action="{% url 'user:login' %}" method="post">
+    <h2>欢迎登陆</h2>
+    {{ form.as_p }}
+    <!-- 使用LoginView，next中记录的是跳转到登陆页面之前的地址，登陆成功后会跳回去 -->
+    <input type="hidden" name="next" value="{{ next }}">
+    {% csrf_token %}
+    <button>登陆</button>
+</form>
+
+
+</body>
+</html>

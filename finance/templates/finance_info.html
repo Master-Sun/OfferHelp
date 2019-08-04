@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>财务管理</title>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        th, td{
+            border: 1px solid black;
+        }
+        #show th {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+
+{% include 'banner.html' %}
+
+<form action="." method="post">
+    <table id="input">
+        <h2>财务登记</h2>
+        <tr>
+            <th>支付宝余额</th>
+            <th>微信余额</th>
+            <th>工资卡余额</th>
+            <th>花呗欠款</th>
+            <th>信用卡欠款</th>
+            <th>其他债务</th>
+            <th>其他债务说明</th>
+        </tr>
+
+        <tr>
+            <!-- 遍历form中的组件到td中 -->
+            {% for item in form %}
+                <td>{{ item }}</td>
+            {% endfor %}
+        </tr>
+
+    </table>
+{% csrf_token %}
+<button>提交</button>
+</form>
+
+{% for field, message in form.errors.items %}
+    <!-- 一个message渲染出来的格式是ul中带一个li -->
+    {{ field }}：{{ message }}
+{% endfor %}
+
+<hr>
+
+<h2>财务记录</h2>
+
+<table id="show">
+    <tr>
+        <th style="width: 65px">序号</th>
+        <th>时间</th>
+        <th>支付宝余额</th>
+        <th>微信余额</th>
+        <th>工资卡余额</th>
+        <th>花呗欠款</th>
+        <th>信用卡欠款</th>
+        <th>其他债务</th>
+        <th>其他债务说明</th>
+        <th>合计余额</th>
+    </tr>
+
+    {% for record in records %}
+    <tr>
+        <td>{{ records.start_index|add:forloop.counter0 }}</td>
+        <td>{{ record.record_time|date:'Y-m-d' }}</td>
+        <td>{{ record.alipay_balance }}</td>
+        <td>{{ record.wechat_balance }}</td>
+        <td>{{ record.paycard_balance }}</td>
+        <td>{{ record.huabei_debt }}</td>
+        <td>{{ record.credit_debt }}</td>
+        <td>{{ record.other }}</td>
+        <td>{{ record.describe }}</td>
+        <td>{{ record.summary }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if records.has_previous %}
+    <a href="?page=1">首页</a>
+    <a href="?page={{ records.previous_page_number }}">上一页</a>
+{% endif %}
+Page {{ records.number }} / {{ records.paginator.num_pages }}
+{% if records.has_next %}
+    <a href="?page={{ records.next_page_number }}">下一页</a>
+    <a href="?page={{ records.paginator.num_pages }}">尾页</a>
+{% endif %}
+
+</body>
+</html>
