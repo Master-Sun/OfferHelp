@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 
@@ -5,6 +6,7 @@ from netdisk.models import Directory, UploadFile
 
 
 # Create your views here.
+@login_required
 def index(request):
     root = Directory.objects.get(user=request.user, parent_dir_id=0)
     dirs = root.get_dirs()

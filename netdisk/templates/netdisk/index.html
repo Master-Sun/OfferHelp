@@ -18,7 +18,7 @@
 </form>
 
 
-<form action="{% url 'netdisk:create_dir' %}" style="float: left;margin-left: 100px" method="post">
+<form action="{% url 'netdisk:create_dir' %}" style="float: left;margin-left: 100px" method="post" onsubmit="return check_dirname()">
     <input type="hidden" value="{{ root.id }}" name="present_dir_id">
     目录名：<input type="text" name="dir_name">
     <button>新建目录</button>
@@ -30,7 +30,7 @@
 <hr>
 
 {% for dir in dirs %}
-<div style="float: left;width: 150px;margin-right: 10px">
+<div style="float: left;width: 150px;height:200px;margin-right: 10px;">
     <div><a href=""><img src="/static/image/folder.jpg" style="height:120px"></a></div>
     <div><span>{{ dir.dir_name }}</span></div>
     <div><span>{{ dir.create_time|date:'Y-m-d' }}</span></div>
@@ -38,8 +38,9 @@
 {% endfor %}
 
 {% for file in files %}
-    <div style="float: left;width: 150px;margin-right: 10px">
-    <div><a href="">
+    <div style="float: left;width: 150px;margin-right: 10px;height:200px;">
+    <!-- a标签中设置download属性可变为直接下载(对于浏览器支持的文件，不加的话浏览器会默认打开而不是下载) -->
+    <div><a href="/media/{{ file.file_path }}" download="{{ file.file_name }}">
         <!-- 文件类型的判断：in方法 -->
         {% if file.file_type in 'pdftxtzip' %}
             <img src="/static/image/{{ file.file_type }}.jpg" style="height:120px">
@@ -53,4 +54,18 @@
 {% endfor %}
 
 </body>
+
+<script src="/static/js/jquery3.4.1.js"></script>
+<script>
+    function check_dirname() {
+        var dir_name = $("input[name='dir_name']").val();
+        console.log("1"+dir_name);
+        if (dir_name){
+            return true;
+        }
+        alert("请输入目录名");
+        return false;
+    }
+</script>
+
 </html>
