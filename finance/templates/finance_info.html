@@ -95,5 +95,36 @@ Page {{ records.number }} / {{ records.paginator.num_pages }}
     <a href="?page={{ records.paginator.num_pages }}">尾页</a>
 {% endif %}
 
+<div id="broken_line" style="width: 600px;height: 400px"></div>
+
 </body>
+
+<script src="/static/js/jquery3.4.1.js"></script>
+<script src="/static/js/echarts-en.common.js"></script>
+<script>
+    // 初始化echarts实例
+    var broken_line = echarts.init(document.getElementById("broken_line"));
+    // 设置图表的配置项和数据
+    var option = {
+        title: {
+            text: '标题',
+            subtext: '副标题',
+            x: 'center'    // 设置标题水平居中
+        },
+        xAxis: {
+            type: 'time',    // 横坐标轴类型
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: 'line'
+        }]
+    };
+    // 选择配置项进行渲染
+    broken_line.setOption(option)
+
+</script>
 </html>

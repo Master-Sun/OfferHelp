@@ -23,8 +23,8 @@ def index(request):
             }
             return render(request, 'finance_info.html', context=context)
     else:
-        records = FinanceRecord.get_record(request.user)
-        paginator = Paginator(records, 5)
+        all_records = FinanceRecord.get_record(request.user)
+        paginator = Paginator(all_records, 5)
         page = request.GET.get('page')
         try:
             records = paginator.get_page(page)
@@ -36,5 +36,6 @@ def index(request):
             'form': FinanceRecordForm(),
             'records': records
         }
-        print(dir(records))
+        d = dict()
+        d['data'] = all_records.values_list('record_time')
         return render(request, 'finance_info.html', context=context)

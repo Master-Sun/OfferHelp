@@ -29,9 +29,14 @@
 
 <hr>
 
+<div>
+    {% if root.parent_dir_id != '0' %}
+        <a href="{% url 'netdisk:entry_dir' root.parent_dir_id %}">返回上级目录</a>
+    {% endif %}
+</div>
 {% for dir in dirs %}
 <div style="float: left;width: 150px;height:200px;margin-right: 10px;">
-    <div><a href=""><img src="/static/image/folder.jpg" style="height:120px"></a></div>
+    <div><a href="{% url 'netdisk:entry_dir' dir.id %}"><img src="/static/image/folder.jpg" style="height:120px"></a></div>
     <div><span>{{ dir.dir_name }}</span></div>
     <div><span>{{ dir.create_time|date:'Y-m-d' }}</span></div>
 </div>

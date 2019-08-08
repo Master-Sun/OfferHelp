@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('upload/', views.upload, name='upload'),
     path('create_dir/', views.create_dir, name='create_dir'),
+    path('entry_dir/<int:dir_id>/', views.entry_dir, name='entry_dir'),
 ]
