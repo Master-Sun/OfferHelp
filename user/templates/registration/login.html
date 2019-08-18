@@ -9,7 +9,16 @@
 
 <form action="{% url 'user:login' %}" method="post">
     <h2>欢迎登陆</h2>
-    {{ form.as_p }}
+{#    {{ form.as_p }}#}
+
+    <!-- django有提供一套视图类解决登陆，注册，登出，密码修改等(直接写前端模板，不用写后台逻辑了)
+    页面可以使用form对象渲染，也可以自己写页面样式，如下(autofocus：输入框自动获得焦点) -->
+    用户名：<input type="text" name="username" autofocus required id="id_username">
+    密码：<input type="password" name="password" required id="id_password">
+    <!-- 自己写输入框的话，错误信息将以此方法进行遍历输出(输出结果：ul中嵌套的li) -->
+    {% for field, message in form.errors.items %}
+        {{ message }}
+    {% endfor %}
     <!-- 使用LoginView，next中记录的是跳转到登陆页面之前的地址，登陆成功后会跳回去 -->
     <input type="hidden" name="next" value="{{ next }}">
     {% csrf_token %}

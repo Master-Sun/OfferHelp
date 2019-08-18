@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from user.models import UserProfile
+from user.models import UserProfile, EmailVerifyRecord
 
 
 # Register your models here.
@@ -19,3 +19,8 @@ class UserProfileAdmin(admin.ModelAdmin):
 
     # 右侧过滤的菜单
     list_filter = ("date_joined",)
+
+
+@admin.register(EmailVerifyRecord)
+class EmailVerifyRecordAdmin(admin.ModelAdmin):
+    list_display = ('user', 'code', 'code_type', 'email', 'expire_time')

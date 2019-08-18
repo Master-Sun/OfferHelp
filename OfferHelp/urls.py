@@ -19,11 +19,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import TemplateView
 
+from rest_framework.routers import DefaultRouter
+from finance.apis import FinanceViewSet
+from rest_framework.documentation import include_docs_urls
+
+# 创建router代理一整套的restful接口
+router = DefaultRouter()
+router.register(r'finance', FinanceViewSet, base_name='api-finance')
 
 urlpatterns = [
+    path('api/', include(router.urls)),
+    path('api/docs/', include_docs_urls(title='finance_restful_doc')),
     path('admin/', admin.site.urls),
     path('user/', include('user.urls', namespace='user')),
     path('finance/', include('finance.urls', namespace='finance')),
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
     path('netdisk/', include('netdisk.urls', namespace='netdisk')),
+    path('captcha/', include('captcha.urls')),    # 图形验证码的路由映射
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

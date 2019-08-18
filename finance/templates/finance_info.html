@@ -102,25 +102,37 @@ Page {{ records.number }} / {{ records.paginator.num_pages }}
 <script src="/static/js/jquery3.4.1.js"></script>
 <script src="/static/js/echarts-en.common.js"></script>
 <script>
+
     // 初始化echarts实例
     var broken_line = echarts.init(document.getElementById("broken_line"));
     // 设置图表的配置项和数据
     var option = {
         title: {
-            text: '标题',
+            text: '标题：余额变动',
             subtext: '副标题',
             x: 'center'    // 设置标题水平居中
         },
         xAxis: {
-            type: 'time',    // 横坐标轴类型
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            type: 'category',    // 横坐标轴类型
+            // 数据渲染时加上safe过滤器，不然可能会有乱码
+            data: {{ echarts_record_time|safe }},
+            name: '日期',
+            axisLabel: {
+                // x轴上显示所有的数据
+                interval: 0,
+                // x轴数据倾斜显示
+                rotate: 30
+            }
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            name: '余额'
         },
         series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line'
+            data: {{ echarts_summary|safe }},
+            type: 'line',
+            // 设置每个折点显示数值
+            itemStyle: {normal: {label: {show: true}}}
         }]
     };
     // 选择配置项进行渲染

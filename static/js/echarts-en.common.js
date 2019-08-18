@@ -33524,7 +33524,7 @@ function getScaleExtent(scale, model) {
         }
     }
 
-    // If bars are placed on a base axis of type time or interval account for axis boundary overflow and current axis
+    // If bars are placed on a base axis of type time or interval user for axis boundary overflow and current axis
     // is base axis
     // FIXME
     // (1) Consider support value axis, where below zero and axis `onZero` should be handled properly.
@@ -33546,7 +33546,7 @@ function getScaleExtent(scale, model) {
             // Calculate placement of bars on axis
             var barWidthAndOffset = makeColumnLayout(barSeriesModels);
 
-            // Adjust axis min and max to account for overflow
+            // Adjust axis min and max to user for overflow
             var adjustedScale = adjustScaleForOverflow(min, max, model, barWidthAndOffset);
             min = adjustedScale.min;
             max = adjustedScale.max;
@@ -58378,7 +58378,7 @@ if (!env$1.canvasSupported) {
         if (hasRotation) {
             // If filters are necessary (rotation exists), create them
             // filters are bog-slow, so only create them if abbsolutely necessary
-            // The following check doesn't account for skews (which don't exist
+            // The following check doesn't user for skews (which don't exist
             // in the canvas spec (yet) anyway.
             // From excanvas
             var p0 = [x, y];

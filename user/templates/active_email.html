@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>激活邮箱</title>
+</head>
+<body>
+
+{% include 'banner.html' %}
+
+{% if request.user.email %}
+    <h1>你的邮箱已激活：{{ request.user.email }}</h1>
+{% else %}
+    <h1>邮箱激活</h1>
+    <form action="" method="post">
+        <p>邮箱：
+            <input type="text" required autofocus name="email">
+            <!-- button类型的按钮，在form表单中点击不会提交表单 -->
+            <button type="button" onclick="get_active_code()">获取激活码</button>{{ active_message }}
+        </p>
+        <p>激活码：<input type="text" name="active_code"></p>
+        <p>
+            验证码：<input type="text" name="verify_code" required>
+            <img src="{{ image_url }}" alt="" id="captcha_image_url">
+            <input type="hidden" name="hash_key" value="{{ hash_key }}" id="captcha_hash_key">
+            <button type="button" onclick="refresh_captcha()">换一张</button>{{ verify_message }}
+        </p>
+        <button>提交</button>
+        {% csrf_token %}
+    </form>
+{% endif %}
+
+</body>
+
+<script src="/static/js/jquery3.4.1.js"></script>
+<script src="/static/js/jquery.cookie.js"></script>
+<script>
+    function get_active_code() {
+        var email = $("input[name='email']").val();
+        var pattern= /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        var result = pattern.test(email);
+        if(result){
+            //邮箱格式正确
+            var token = $.cookie('csrftoken');
+            $.ajax({
+                url: '/user/email/send_active_code/',
+                type: 'post',
+                data: {'email': email},
+                headers: {'X-CSRFToken': token},
+                success: function (resp) {
+                    alert(resp);
+                }
+            })
+        }else{
+            //邮箱格式不正确
+            alert('邮箱格式不正确');
+        }
+    }
+    
+    function refresh_captcha() {
+        $.get('/user/refresh_captcha/', function (resp) {
+            $("#captcha_image_url").attr('src', resp.image_url);
+            $("#captcha_hash_key").val(resp.hash_key);
+        })
+    }
+</script>
+
+</html>

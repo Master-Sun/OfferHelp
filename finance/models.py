@@ -15,6 +15,7 @@ class FinanceRecord(models.Model):
     other = models.DecimalField(max_digits=8, decimal_places=2, default=0.00,verbose_name='其他财务')
     describe = models.CharField(max_length=512, verbose_name='其他财务状况说明', blank=True, null=True)
     summary = models.CharField(max_length=256, verbose_name='合计余额')
+    # DateTimeField类型设置auto_now_add为True后，将变为只读字段，后台也无法修改
     record_time = models.DateTimeField(auto_now_add=True, verbose_name='记录时间')
 
     def __str__(self):
@@ -22,6 +23,8 @@ class FinanceRecord(models.Model):
 
     # 重写模型的save方法，设置summary字段
     def save(self, *args, **kwargs):
+        if not self.other:
+            self.other = 0
         self.summary = self.alipay_balance + self.wechat_balance + self.paycard_balance + self.huabei_debt + self.credit_debt + \
             self.other
         super().save(*args, **kwargs)

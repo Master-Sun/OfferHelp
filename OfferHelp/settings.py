@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'user',
     'finance',
     'netdisk',
+    'captcha',    # 图形验证码的库，需要进行数据库的迁移migrate
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,7 +138,7 @@ LOGIN_REDIRECT_URL = '/'    # 如有登录页中有next参数，则优先跳转�
 # 重定向到登陆的页面：如使用login_required装饰器的视图
 LOGIN_URL = 'user:login'
 
-SESSION_COOKIE_AGE = 60 * 60 * 2
+SESSION_COOKIE_AGE = 60 * 60 * 5
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
@@ -144,3 +146,40 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+# 将邮件打印在终端上，便于测试
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.163.com'    # SMTP服务器主机
+EMAIL_HOST_USER = 'kzzf_sk@163.com'    # 邮箱账号
+EMAIL_HOST_PASSWORD = 'sk696867'    # 这里填的是授权码
+EMAIL_PORT = 25    # SMTP端口，默认25
+EMAIL_USE_TLS = True    # 是否采用TLS安全连接
+EMAIL_FROM = '空中追风<kzzf_sk@163.com>'    # 显示的发件人
+
+
+# 图形验证码库的配置：django-simple-captcha
+# 设置 captcha 图片大小
+CAPTCHA_IMAGE_SIZE = (100, 40)
+# 字符个数
+CAPTCHA_LENGTH = 4
+# 超时(minutes)
+CAPTCHA_TIMEOUT = 1
+# 验证码类型：默认为普通字符
+# CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
+# 简单计算
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+
+
+# RESTful接口相关的配置
+REST_FRAMEWORK = {
+    # 解决报错问题：'AutoSchema' object has no attribute 'get_link'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
+    # 其他分页选项
+    # rest_framework.pagination.PageNumberPagination：常用，当前是第几页，每页多少条数据
+    # rest_framework.pagination.CursorPagination：不能自己输入分页参数，防止用户填写任意页码和数据量来获取数据
+    # Cursor分页默认以created字段来排序，如果表中没有该字段，可通过继承CursorPagination自定义ordering属性为id或其他字段
+    # 这个是基于偏移量和limit的分页，即当前是第几条，还要获取多少条
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
+}
