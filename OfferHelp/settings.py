@@ -123,10 +123,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# 静态资源访问的起始url
 STATIC_URL = '/static/'
+# 指定静态资源所在的目录
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+# 设置收集静态资源的路径(部署时使用)
+STATIC_ROOT = '/home/kzzf/project/OfferHelp/static'
 
 # 重写User类后，需指定当前使用的User类
 AUTH_USER_MODEL = 'user.UserProfile'
