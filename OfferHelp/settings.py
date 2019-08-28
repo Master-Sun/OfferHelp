@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# 配置根级 url
 ROOT_URLCONF = 'OfferHelp.urls'
 
 TEMPLATES = [
@@ -149,17 +150,18 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+from OfferHelp import private_settings
 
 # 将邮件打印在终端上，便于测试
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.163.com'    # SMTP服务器主机
-EMAIL_HOST_USER = 'kzzf_sk@163.com'    # 邮箱账号
-EMAIL_HOST_PASSWORD = 'sk696867'    # 这里填的是授权码
+EMAIL_HOST_USER = private_settings.EMAIL_HOST_USER    # 邮箱账号
+EMAIL_HOST_PASSWORD = private_settings.EMAIL_HOST_PASSWORD    # 这里填的是授权码
 EMAIL_PORT = 25    # SMTP端口，默认25
 EMAIL_USE_TLS = True    # 是否采用TLS安全连接
-EMAIL_FROM = '空中追风<kzzf_sk@163.com>'    # 显示的发件人
+EMAIL_FROM = private_settings.EMAIL_FROM    # 显示的发件人
 
 
 # 图形验证码库的配置：django-simple-captcha
@@ -187,3 +189,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 2,
 }
+
+
+# 对于订单号并发下不重复，可在设计model时增加 unique=True，插入时循环捕获异常即可

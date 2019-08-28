@@ -1,6 +1,7 @@
 workspace.xml
 media/*
 static/*
+private_settings.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
