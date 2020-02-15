@@ -1,5 +1,7 @@
+import os
+
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from django.shortcuts import render, redirect, reverse
 
 from netdisk.models import Directory, UploadFile
@@ -31,10 +33,10 @@ def upload(request):
         upload_file.file_path = file_obj
         upload_file.file_size = file_obj.size
         upload_file.file_type = ext
+
         dir_id = request.POST.get('dir_id')
         upload_file.dir = Directory.objects.get(id=dir_id)
         upload_file.save()
-        print(reverse('netdisk:entry_dir', args=(dir_id,)))
         return redirect(reverse('netdisk:entry_dir', args=(dir_id,)))
 
 
@@ -60,3 +62,18 @@ def entry_dir(request, dir_id):
         'root': root,
     }
     return render(request, 'netdisk/index.html', context=context)
+
+
+def delete_file(request):
+    file_id = request.GET.get('file_id')
+    file_obj = UploadFile.objects.filter(id=file_id)
+    if file_obj:
+        if file_obj[0].dir.user == request.user:
+            file_obj[0].delete()
+            return JsonResponse({'result': 'success'})
+        else:
+            return JsonResponse({'result': 'fail', 'msg': '无权删除他人文件'})
+    else:
+        return HttpResponse({'result': 'fail', 'msg': '文件已删除或已删除'})
+
+

@@ -126,7 +126,8 @@ Page {{ records.number }} / {{ records.paginator.num_pages }}
         },
         yAxis: {
             type: 'value',
-            name: '余额'
+            name: '余额',
+            min: 1500
         },
         series: [{
             data: {{ echarts_summary|safe }},

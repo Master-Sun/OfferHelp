@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from OfferHelp import private_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,7 @@ SECRET_KEY = 'o1j3$v+3@j@6k=6r(^_f-b&7s_k40nu86vuvudu85mpwzj*86d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,6 +37,9 @@ INSTALLED_APPS = [
     'netdisk',
     'captcha',    # 图形验证码的库，需要进行数据库的迁移migrate
     'rest_framework',
+
+    'xadmin',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,11 +51,15 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 国际化翻译中间件，启用后用户可自行选择支持的语言，否则将根据浏览器请求头
+    # 顺序：在session，cache之后，common之前
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mymiddleware.checklogin.MyMiddleWare',
 ]
 
 # 配置根级 url
@@ -65,6 +73,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.i18n',    # 支持国际化，加在第一个
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -82,8 +91,12 @@ WSGI_APPLICATION = 'OfferHelp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'OfferHelp_db',
+        'USER': private_settings.USER,
+        'PASSWORD': private_settings.PASSWORD,
+        'HOST': 'localhost',
+        'PORT': 3306
     }
 }
 
@@ -110,12 +123,24 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
+# LANGUAGES = (
+#     ('en', 'English'),
+#     ('zh-Hans', '中文简体'),
+# )
+
+# 默认的语言
 LANGUAGE_CODE = 'zh-Hans'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),  # 翻译文件所在目录，请自行创建
+)
 
 TIME_ZONE = 'Asia/Shanghai'
 
+# 是否启用翻译系统，设置false可提高性能
 USE_I18N = True
 
+# 是否启用数据的本地化格式，设置为True时将使用当前语言环境的格式显示日期和数字
 USE_L10N = True
 
 USE_TZ = True
@@ -131,7 +156,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 # 设置收集静态资源的路径(部署时使用)
-STATIC_ROOT = '/home/kzzf/project/OfferHelp/static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'collect_static/')
 
 # 重写User类后，需指定当前使用的User类
 AUTH_USER_MODEL = 'user.UserProfile'
@@ -150,7 +175,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-from OfferHelp import private_settings
 
 # 将邮件打印在终端上，便于测试
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -191,4 +215,6 @@ REST_FRAMEWORK = {
 }
 
 
-# 对于订单号并发下不重复，可在设计model时增加 unique=True，插入时循环捕获异常即可
+# 设置xadmin的系统标题和底部展示信息
+# XADMIN_TITLE = 'OfferHelp个人自助平台'
+# XADMIN_FOOTER_TITLE = 'power by Master-Sun'

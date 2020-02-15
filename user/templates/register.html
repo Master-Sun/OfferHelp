@@ -13,10 +13,10 @@
 {#    {{ register_form.as_p }}#}
     
     <!-- form表单可以自动渲染，也可以手动渲染，也可以直接写input标签，只要name属性能对上就行 -->
-    <p><label>用户名：{{ register_form.username }}</label></p>
-    <p><label>昵称：{{ register_form.nick_name }}</label></p>
-    <p><label>密码：{{ register_form.password }}</label></p>
-    <p><label>再次输入密码：<input type="password" name="password2"></label></p>
+    <p><label>用户名：{{ register_form.username }}</label></p>  {{ register_form.username.errors }}
+    <p><label>昵称：{{ register_form.nick_name }}</label></p>  {{ register_form.nick_name.errors }}
+    <p><label>密码：{{ register_form.password }}</label></p>   {{ register_form.password.errors }}
+    <p><label>再次输入密码：<input type="password" name="password2"></label></p> {{ register_form.password2.errors }}
     <div class="form-group">
 {#        {{ register_form.captcha.errors }}#}
         {{ register_form.captcha.label_tag }}
@@ -27,6 +27,7 @@
     <button>提交</button>
 </form>
 
+<!-- 遍历表单中所有的错误信息：以li元素展示 -->
 {% for key,value in register_form.errors.items %}
     {{ value }}
 {% endfor %}

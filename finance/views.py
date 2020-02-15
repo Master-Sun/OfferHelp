@@ -7,7 +7,7 @@ from finance.models import FinanceRecord
 
 
 # Create your views here.
-@login_required
+# @login_required
 def index(request):
     if request.method == 'POST':
         form = FinanceRecordForm(request.POST)

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="089f6e97-6abe-4cf3-939a-99f21e3b9b0d" name="122.51.86.166" url="http://122.51.86.166/">
+        <fileTransfer host="122.51.86.166" port="22" rootFolder="/home/kzzf/project/OfferHelp/" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions controlEncoding="UTF-8" dataProtectionLevel="Private" keepAliveTimeout="0" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

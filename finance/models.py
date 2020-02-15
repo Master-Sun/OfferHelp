@@ -1,5 +1,4 @@
 from django.db import models
-
 from user.models import UserProfile
 
 
@@ -25,8 +24,8 @@ class FinanceRecord(models.Model):
     def save(self, *args, **kwargs):
         if not self.other:
             self.other = 0
-        self.summary = self.alipay_balance + self.wechat_balance + self.paycard_balance + self.huabei_debt + self.credit_debt + \
-            self.other
+        self.summary = self.alipay_balance + self.wechat_balance + self.paycard_balance + self.huabei_debt + \
+                       self.credit_debt + self.other
         super().save(*args, **kwargs)
 
     class Meta:

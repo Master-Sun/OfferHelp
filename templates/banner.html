@@ -1,3 +1,5 @@
+{% load i18n %}  <!-- 模板中开启国际化功能 -->
+
 {% if request.user.is_authenticated %}
     欢迎：{{ request.user.username }}
     <a href="{% url 'user:logout' %}">注销</a>
@@ -6,11 +8,18 @@
     <a href="{% url 'user:register'%}">注册</a>
 {% endif %}
 
-<a href="{% url 'index' %}">首页</a>
-<a href="{% url 'finance:index' %}">账务管理</a>
-<a href="{% url 'netdisk:index' %}">云盘</a>
+<a href="{% url 'index' %}">{% trans '首页' %}</a>
+<a href="{% url 'finance:index' %}">{% trans '账务管理' %}</a>
+<a href="{% url 'netdisk:index' %}">{% trans '云盘' %}</a>
 
 
-<a href="{% url 'user:active_email' %}">激活邮箱</a>
+<a href="{% url 'user:active_email' %}">{% trans '激活邮箱' %}</a>
+
+{% if request.user.is_staff %}
+    <a href="/xadmin/">后台</a>
+{% endif %}
+
+<a href="/i18n/zh-hans">中文</a>
+<a href="/i18n/?prefix_default_language=en">en</a>
 
 <hr>

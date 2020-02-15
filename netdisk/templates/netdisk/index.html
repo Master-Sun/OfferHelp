@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>云盘</title>
+    <style>
+        span {
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
 
@@ -36,7 +41,7 @@
 </div>
 {% for dir in dirs %}
 <div style="float: left;width: 150px;height:200px;margin-right: 10px;">
-    <div><a href="{% url 'netdisk:entry_dir' dir.id %}"><img src="/static/image/folder.jpg" style="height:120px"></a></div>
+    <div><a href="{% url 'netdisk:entry_dir' dir.id %}"><img src="/static/image/folder.jpg" style="height:100px"></a></div>
     <div><span>{{ dir.dir_name }}</span></div>
     <div><span>{{ dir.create_time|date:'Y-m-d' }}</span></div>
 </div>
@@ -48,13 +53,14 @@
     <div><a href="/media/{{ file.file_path }}" download="{{ file.file_name }}">
         <!-- 文件类型的判断：in方法 -->
         {% if file.file_type in 'pdftxtzip' %}
-            <img src="/static/image/{{ file.file_type }}.jpg" style="height:120px">
+            <img src="/static/image/{{ file.file_type }}.jpg" style="height:100px">
         {% else %}
             <img src="/static/image/unknow.jpg" style="height:120px">
         {% endif %}
     </a></div>
     <div><span>{{ file.file_name }}</span></div>
     <div><span>{{ file.upload_time|date:'Y-m-d' }}</span></div>
+    <div><button onclick="delete_file({{ file.id }})">删除</button></div>
 </div>
 {% endfor %}
 
@@ -70,6 +76,18 @@
         }
         alert("请输入目录名");
         return false;
+    }
+
+    function delete_file(file_id) {
+        $.get('/netdisk/delete/', {'file_id': file_id}, function (res) {
+            if(res.result == 'success'){
+                alert('删除成功');
+                location.reload()
+            }else{
+                alert(res.msg);
+                location.reload()
+            }
+        },'json')
     }
 </script>
 
